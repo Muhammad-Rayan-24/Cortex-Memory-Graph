@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cortex Memory Graph - High Performance LOD Demo</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='6' fill='%237C3AED'/%3E%3C/svg%3E"/>
+    <style>
+        :root { --bg:#0f1021; --text:#E5E7EB; --accent:#7C3AED; }
+        body { margin:0; overflow:hidden; background: radial-gradient(1000px 800px at 20% 10%, #181a35 0%, var(--bg) 45%, #0b0c1a 100%); color:var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial; }
+        #info { position:absolute; top:12px; left:12px; z-index:100; pointer-events:none; background:rgba(19,20,42,0.6); border:1px solid rgba(124,58,237,0.3); padding:10px 12px; border-radius:10px; backdrop-filter: blur(6px); }
+        .tag { background: rgba(124,58,237,0.18); border:1px solid #7C3AED; padding:4px 8px; border-radius:6px; margin-bottom:5px; display:inline-block; }
+        #hud { margin-top:8px; font-size:12px; line-height:1.35; }
+        .ctrl { display:flex; align-items:center; gap:8px; margin-top:6px; pointer-events:auto; }
+        .ctrl input[type=range] { width:160px; }
+        .ctrl input[type=number] { width:110px; background:rgba(255,255,255,0.06); color:var(--text); border:1px solid rgba(255,255,255,0.12); border-radius:6px; padding:3px 6px; }
+        .ctrl input[type=checkbox] { transform: scale(1.1); }
+        #legend { position:absolute; right:12px; top:12px; z-index:100; background:rgba(19,20,42,0.6); border:1px solid rgba(255,255,255,0.08); padding:8px 10px; border-radius:10px; backdrop-filter: blur(6px); font-size:12px; }
+        .row { display:flex; align-items:center; gap:8px; margin:4px 0; white-space:nowrap; }
+        .swatch { width:10px; height:10px; border-radius:50%; display:inline-block; border:1px solid rgba(255,255,255,0.6); }
+        .btn { pointer-events:auto; display:inline-block; color:var(--text); background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:4px 8px; border-radius:6px; font-size:12px; margin-top:6px; cursor:pointer; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h2 style="margin:0 0 4px 0; font-size:16px; font-weight:600;">Cortex Second Brain Map</h2>
+        <div class="tag" id="nodeCount">Neurons (Virtual): 10,000,000</div><br>
+        <div class="tag">Synapses (Edges): On-Demand Near Focus</div>
+        <div id="hud">
+            <div>Hover: <span id="hoverInfo">None</span></div>
+            <div>Selected: <span id="selectInfo">None</span></div>
+            <div>Shown on GPU: <span id="shownCount">0</span></div>
+            <div>GPU Budget: <span id="budget">0</span></div>
+            <div class="ctrl">
+                <label for="budgetRange" style="opacity:.9;">Adjust shown nodes</label>
+                <input id="budgetRange" type="range" min="0" max="2000000" step="10000" />
+                <input id="budgetInput" type="number" min="0" max="2000000" step="10000" />
+            </div>
+            <hr style="opacity:.15; border:none; border-top:1px solid rgba(255,255,255,.1); margin:8px 0; pointer-events:none;">
+            <div class="ctrl">
+                <label for="showEdges">Show connections</label>
+                <input id="showEdges" type="checkbox" checked />
+                <button id="reseedEdges" class="btn" type="button">Reseed connections</button>
+            </div>
+            <div class="ctrl">
+                <label for="edgePctRange">Connections (% of nodes)</label>
+                <input id="edgePctRange" type="range" min="0" max="100" step="1" />
+                <input id="edgePctInput" type="number" min="0" max="100" step="1" />
+            </div>
+            <div class="ctrl">
+                <label for="edgeFracRange">Edge node fraction</label>
+                <input id="edgeFracRange" type="range" min="0" max="0.5" step="0.01" />
+                <input id="edgeFracInput" type="number" min="0" max="0.5" step="0.01" />
+            </div>
+            <div class="ctrl">
+                <label for="edgesPerNodeRange">Edges per node</label>
+                <input id="edgesPerNodeRange" type="range" min="0" max="4" step="1" />
+                <input id="edgesPerNodeInput" type="number" min="0" max="4" step="1" />
+            </div>
+            <button id="resetBtn" class="btn" type="button">Reset View</button>
+        </div>
+    </div>
+    <div id="legend">
+        <div style="font-weight:600; opacity:0.9; margin-bottom:4px;">Brain Regions</div>
+        <div id="legendRows"></div>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+</body>
+</html>
