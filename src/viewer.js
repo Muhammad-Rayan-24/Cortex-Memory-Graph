@@ -28,12 +28,16 @@ export class Viewer {
     this.controls.enableDamping = true;
     this.controls.enableZoom = true;
     this.controls.enablePan = true;
-    this.controls.zoomSpeed = 1.0;
-    this.controls.panSpeed = 0.6;
+    this.controls.dollyToCursor = true; // zoom toward cursor for finer control
+    this.controls.zoomSpeed = 0.35;     // gentler zoom
+    this.controls.panSpeed = 0.5;
     this.controls.rotateSpeed = 0.6;
     this.controls.dampingFactor = 0.08;
-    this.controls.minDistance = 20;
-    this.controls.maxDistance = 3000;
+    // Distance clamps derived from scene bounds to avoid "inside or far away" jumps
+    const minD = Math.max(40, Math.min(this.bounds.a, this.bounds.b, this.bounds.c) * 0.6);
+    const maxD = Math.max(this.bounds.a, this.bounds.b, this.bounds.c) * 6.0;
+    this.controls.minDistance = minD;
+    this.controls.maxDistance = maxD;
 
     // Starfield background
     this._addStars();
@@ -186,7 +190,9 @@ export class Viewer {
 
   resetView() {
     this.controls.target.set(0,0,0);
-    this.camera.position.set(260, 140, 560);
+    // Reset to a comfortable distance based on bounds
+    const d = Math.max(this.bounds.a, this.bounds.b, this.bounds.c) * 3.1;
+    this.camera.position.set(0.9*d, 0.5*d, d);
     this.controls.update();
     if (this.onViewChanged) this.onViewChanged();
   }
