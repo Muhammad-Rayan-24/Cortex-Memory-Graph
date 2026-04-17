@@ -82,8 +82,9 @@ const viewer = new Viewer({
   bounds: BOUNDS,
 });
 
-// Worker-driven point generation with LOD
-const worker = new Worker('../workers/tileWorker.js', { type: 'module' });
+// Worker-driven point generation with LOD (resolve relative to this module URL so it works on GitHub Pages subpaths)
+const workerUrl = new URL('../workers/tileWorker.js', import.meta.url);
+const worker = new Worker(workerUrl, { type: 'module' });
 
 let pending = false;
 let lastFrameTime = 0;
@@ -141,6 +142,15 @@ worker.onmessage = (e) => {
     // console.debug('[Cortex LOD] received points:', count, 'edges:', edgeCount||0);
     pending = false;
   }
+};
+
+worker.onerror = (e) => {
+  console.error('[Cortex LOD] Worker error:', e.message || e);
+  pending = false;
+};
+worker.onmessageerror = (e) => {
+  console.error('[Cortex LOD] Worker message error:', e);
+  pending = false;
 };
 
 // Interactions: hover & click
