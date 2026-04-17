@@ -29,7 +29,7 @@ export class Viewer {
     this.controls.enableZoom = true;
     this.controls.enablePan = true;
     this.controls.dollyToCursor = true; // zoom toward cursor for finer control
-    this.controls.zoomSpeed = 0.35;     // gentler zoom
+    this.controls.zoomSpeed = 0.25;     // gentler zoom
     this.controls.panSpeed = 0.5;
     this.controls.rotateSpeed = 0.6;
     this.controls.dampingFactor = 0.08;
